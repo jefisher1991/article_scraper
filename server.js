@@ -13,7 +13,6 @@ var app = express();
 
 app.use(express.static("public"));
 
-
 mongoose.connect("mongodb://localhost/articleScraper");
 var db = mongoose.connection;
 
@@ -21,26 +20,23 @@ db.on("error", function(error) {
   console.log("Mongoose Error: ", error);
 });
 
-
 db.once("open", function() {
   console.log("Mongoose connection successful.");
 });
 
 app.get("/scrape", function(req, res) {
 
-  request("http://www.bbc.com/news/0", function(error, response, html) {
-    
+  request("http://reddit.com", function(error, response, html) {
+
     var $ = cheerio.load(html);
-
     // How do I grab this heading?!?!
-    $(h3.gs-c-promo-heading__title).each(function(i, element) {
-
-     
+    $('a.title').each(function(i, element) {
       var result = {};
-
       // Add the text and href of every link, and save them as properties of the result object
+      // result.title = $(this).text();
+      // result.link = $(this).children("a").attr("href");
       result.title = $(this).text();
-      result.link = $(this).children("a").attr("href");
+      result.link = $(this).attr("href");
 
       // Using our Article model, create a new entry
       // This effectively passes the result object to the entry (and the title and link)
