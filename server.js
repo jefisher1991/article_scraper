@@ -29,12 +29,10 @@ app.get("/scrape", function(req, res) {
   request("http://reddit.com", function(error, response, html) {
 
     var $ = cheerio.load(html);
-    // How do I grab this heading?!?!
+
     $('a.title').each(function(i, element) {
       var result = {};
-      // Add the text and href of every link, and save them as properties of the result object
-      // result.title = $(this).text();
-      // result.link = $(this).children("a").attr("href");
+     
       result.title = $(this).text();
       result.link = $(this).attr("href");
 
@@ -63,7 +61,7 @@ app.get("/scrape", function(req, res) {
 // This will get the articles we scraped from the mongoDB
 app.get("/articles", function(req, res) {
   // Grab every doc in the Articles array
-  db.find({}, function(error, doc) {
+  db.article.find({}, function(error, doc) {
     // Log any errors
     if (error) {
       console.log(error);
